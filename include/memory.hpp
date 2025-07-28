@@ -26,6 +26,8 @@ class Memory {
         uint8_t getMemory(uint16_t address) { return memory[address]; };
         void setMemory(uint16_t address, uint8_t value) { memory[address] = value; };
 
+        void stackPush(uint16_t value);
+        uint16_t stackPop();
 
         bool load(const char * file_path);
         uint16_t fetch();
@@ -33,7 +35,8 @@ class Memory {
 
     private:
         uint8_t memory[MAX_MEMORY_SIZE];
-        uint8_t stack[MAX_STACK_SIZE];
+        uint16_t stack[MAX_STACK_SIZE];
+        uint8_t stackPos;
 
         uint16_t ri;
         uint16_t pc;

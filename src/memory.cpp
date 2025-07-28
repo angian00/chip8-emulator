@@ -20,6 +20,8 @@ bool Memory::load(const char *file_path)
     fclose(f);
 
     pc = START_ADDRESS;
+    stackPos = 0;
+
     return true;
 }
 
@@ -47,4 +49,28 @@ void Memory::dump()
              << " " << std::format("{:02x}", memory[i])
              << endl;
     }   
+}
+
+
+void Memory::stackPush(uint16_t value)
+{
+    if (stackPos >= MAX_STACK_SIZE)
+    {
+        cout << "Stack overflow!!" << endl;
+        return;
+    }
+
+    stack[stackPos++] = value;
+}
+
+
+uint16_t Memory::stackPop()
+{
+    if (stackPos <= 0)
+    {
+        cout << "Stack underflow!!" << endl;
+        return 0x0000;
+    }
+
+    return stack[--stackPos];
 }

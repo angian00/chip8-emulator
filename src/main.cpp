@@ -8,6 +8,8 @@ using namespace std;
 #include "cpu.hpp"
 #include "display.hpp"
 
+#define DEBUG_OPCODES 1
+
 
 Memory* memory;
 Display* display;
@@ -79,17 +81,19 @@ int main(int argc, char* argv[])
 bool emulateCycle() {
     auto pc = memory->getPC();
     if (memory->getPC() >= Memory::MAX_MEMORY_SIZE) {
-        //cout << "Out of Memory!!" << endl;
+        cout << "Out of Memory!!" << endl;
         //break;
         return false;
 
     } else {
         auto instr = memory->fetch();
 
-        //Decode the instruction to find out what the emulator should do
-        // cout << " pc: 0x" << std::format("{:04x}", pc)
-        // << " instr: " << std::format("{:04x}", instr)
-        // << endl;
+        if (DEBUG_OPCODES) {
+            //Decode the instruction to find out what the emulator should do
+            cout << " pc: 0x" << std::format("{:04x}", pc)
+            << " instr: " << std::format("{:04x}", instr)
+            << endl;
+        }
         
         //running = cpu->execute(instr);
        return cpu->execute(instr);

@@ -1,6 +1,9 @@
 #all executables
 *.x
 
+# logs
+*.log
+
 #cmake byproducts
 CMakeCache.txt
 CMakeFiles
