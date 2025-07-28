@@ -6,7 +6,7 @@ class Display {
     public:
         static const int WIDTH = 64;
         static const int HEIGHT =32;
-        static const int SCALE_FACTOR = 10;
+        static const int SCALE_FACTOR = 20;
 
         static const uint8_t COLOR_BLACK[];
         static const uint8_t COLOR_WHITE[];
@@ -17,7 +17,7 @@ class Display {
         void shutdownSdl();
 
         void run();
-        bool pollEvent();
+        bool handleEvents();
 
         void clear();
         void togglePixel(uint8_t x, uint8_t y);

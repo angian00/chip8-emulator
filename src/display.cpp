@@ -107,7 +107,7 @@ void Display::delay(int delay)
     SDL_Delay(delay);
 }
 
-bool Display::pollEvent()
+bool Display::handleEvents()
 {
     SDL_Event e;
 
