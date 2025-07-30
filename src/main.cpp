@@ -68,9 +68,9 @@ int main(int argc, char* argv[])
         for (auto iCycle=0; iCycle < nCyclesPerFrame; iCycle++)
         {
             emulateCycle();
+            display->refresh();
         }
 
-        display->refresh();
 
         auto frameEnd = std::chrono::high_resolution_clock::now();
         auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(frameEnd - frameStart).count();
