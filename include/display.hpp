@@ -17,17 +17,16 @@ class Display {
         void shutdownSdl();
 
         void run();
-        bool handleEvents();
 
         void clear();
         void togglePixel(uint8_t x, uint8_t y);
 
         void refresh();
         void delay(int delay);
-
+        
     private:
         bool pixels[WIDTH][HEIGHT];
-
+        
         bool sdlInited = false;
         SDL_Window* window;
         SDL_Renderer* renderer;

@@ -10,9 +10,18 @@ using namespace std;
 #define BITSHIFT_IN_PLACE 1
 
 
-Cpu::Cpu(Memory* memory, Display* display): memory(memory), display(display)
+Cpu::Cpu(Memory* memory, Display* display, Keyboard* keyboard): 
+        memory(memory), display(display), keyboard(keyboard)
 {
+    delayTimer = 0x00;
     srand(time(0));
+}
+
+
+void Cpu::updateTimers()
+{
+    if (delayTimer > 0)
+        delayTimer --;
 }
 
 bool Cpu::execute(uint16_t instr)
@@ -227,16 +236,25 @@ bool Cpu::execute(uint16_t instr)
             switch (nn)
             {
                 case 0x9E:
+                {
                     //skipIfKeyPressed(x)
-                    //TODO
-                    cout << "TODO: skipIfKeyPressed" << endl;
-
+                    auto targetKeyValue = memory->getRegister(x);
+                    auto pressedKey = keyboard->getKey();
+                    if (pressedKey == targetKeyValue)
+                        memory->setPC(memory->getPC() + 2);
                     break;
+                }
+                
                 case 0xA1:
+                {
                     //skipIfKeyNotPressed(x)
-                    //TODO
-                    cout << "TODO: skipIfKeyNotPressed" << endl;
+                    auto targetKeyValue = memory->getRegister(x);
+                    auto pressedKey = keyboard->getKey();
+                    if (!(pressedKey == targetKeyValue))
+                        memory->setPC(memory->getPC() + 2);
                     break;
+                }
+
                 default:
                     cout << "Invalid EXNN opcode: " << format("{:04x}", instr) << endl;
                     return false;                
@@ -249,20 +267,29 @@ bool Cpu::execute(uint16_t instr)
             {
                 case 0x07:
                     //getDelayTimer(x)
-                    //TODO
-                    cout << "TODO: getDelayTimer" << endl;
+                    memory->setRegister(x, delayTimer);
                     break;
 
                 case 0x0A:
+                {
                     //getKey(x)
-                    //TODO
-                    cout << "TODO: getKey" << endl;
+                    auto pressedKey = keyboard->getKey();
+                    if (pressedKey == NoKey)
+                    {
+                        //do again
+                        memory->setPC(memory->getPC() - 2);
+                    }
+                    else
+                    {
+                        memory->setRegister(x, pressedKey);
+                    }
+
                     break;
+                }
 
                 case 0x15:
                     //setDelayTimer(x)
-                    //TODO
-                    cout << "TODO: setDelayTimer" << endl;
+                    delayTimer = memory->getRegister(x);
                     break;
 
                 case 0x18:
@@ -348,4 +375,5 @@ bool Cpu::execute(uint16_t instr)
 
     return true;
 }
+
 

@@ -5,14 +5,9 @@
 using namespace std;
 
 
-#define SCREEN_WIDTH    800
-#define SCREEN_HEIGHT   600
-
-//64 pixels wide and 32 tall
-
-
 const uint8_t Display::COLOR_BLACK[] = { 0x00, 0x00, 0x00, 0xff };
 const uint8_t Display::COLOR_WHITE[] = { 0xcc, 0xcc, 0xcc, 0xff };
+
 
 bool Display::initSdl()
 {
@@ -106,12 +101,3 @@ void Display::delay(int delay)
 {
     SDL_Delay(delay);
 }
-
-bool Display::handleEvents()
-{
-    SDL_Event e;
-
-    auto hasEvent = SDL_PollEvent(&e);
-    return !(hasEvent && e.type == SDL_QUIT);
-}
-

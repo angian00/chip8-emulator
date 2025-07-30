@@ -7,12 +7,13 @@ using namespace std;
 #include "memory.hpp"
 #include "cpu.hpp"
 #include "display.hpp"
+#include "keyboard.hpp"
 
-#define DEBUG_OPCODES 1
+//#define DEBUG_OPCODES 1
+#define DEBUG_OPCODES 0
 
 
 Memory* memory;
-Display* display;
 Cpu* cpu;
 
 bool emulateCycle();
@@ -20,10 +21,14 @@ bool emulateCycle();
 
 const int targetFps = 60;
 const int frameDelay = 1000 / targetFps;
+const int nCyclesPerFrame = 12;
 
 
 int main(int argc, char* argv[])
 {
+    Display* display;
+    Keyboard* keyboard;
+
     cout << "CHIP-8 emulator by AnGian" << endl;
 
     if (argc < 2) {
@@ -46,7 +51,8 @@ int main(int argc, char* argv[])
         return 1;
     }
     
-    cpu = new Cpu(memory, display);
+    keyboard = new Keyboard();
+    cpu = new Cpu(memory, display, keyboard);
 
     //DEBUG
     //memory->dump();
@@ -57,8 +63,13 @@ int main(int argc, char* argv[])
     while (running) {
         auto frameStart = std::chrono::high_resolution_clock::now();
 
-        emulateCycle();
-        
+        cpu->updateTimers();
+
+        for (auto iCycle=0; iCycle < nCyclesPerFrame; iCycle++)
+        {
+            emulateCycle();
+        }
+
         display->refresh();
 
         auto frameEnd = std::chrono::high_resolution_clock::now();
@@ -68,7 +79,7 @@ int main(int argc, char* argv[])
             display->delay(frameDelay - frameTime);
         }
 
-        running = display->handleEvents();
+        running = keyboard->handleEvents();
         if (!running)
             cout << "Got SDL quit" << endl;
     }
@@ -95,8 +106,6 @@ bool emulateCycle() {
             << endl;
         }
         
-        //running = cpu->execute(instr);
        return cpu->execute(instr);
     }
 }
-
